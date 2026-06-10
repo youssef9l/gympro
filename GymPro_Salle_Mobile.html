@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#070810"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="apple-mobile-web-app-title" content="GymPro"/>
+<title>GymPro Maroc</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#070810;--bg2:#0c0d1a;--bg3:#111225;--bg4:#161830;
+  --border:#1e2040;--border2:#262850;
+  --txt:#e8eaf6;--txt2:#8892b0;--txt3:#4a5080;
+  --blue:#3d5afe;--blue2:#5c6bff;--blue-glow:rgba(61,90,254,.25);
+  --green:#00e676;--green2:#69f0ae;--green-bg:rgba(0,230,118,.08);
+  --red:#ff1744;--red2:#ff5252;--red-bg:rgba(255,23,68,.08);
+  --yellow:#ffd740;--yellow-bg:rgba(255,215,64,.08);
+  --orange:#ff9100;--gold:#ffab00;
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-t:env(safe-area-inset-top,0px);
+}
+html,body{height:100%;width:100%;margin:0;padding:0;overflow:hidden}
+html{font-size:15px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+input,select,textarea{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--txt);font-size:14px;padding:12px 14px;font-family:'Inter',sans-serif;outline:none;width:100%;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-glow)}
+input::placeholder,textarea::placeholder{color:var(--txt3)}
+select option{background:var(--bg3)}
+button{cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.hidden{display:none!important}
+
+/* LOCK SCREEN */
+#lockscreen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px}
+.lock-logo{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:.12em;background:linear-gradient(135deg,var(--blue),#8c9eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lock-sub{font-size:10px;color:var(--txt3);letter-spacing:.25em;text-transform:uppercase}
+.lock-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:28px 20px;width:100%;max-width:300px;text-align:center}
+.lock-title{font-size:12px;color:var(--txt2);margin-bottom:16px}
+.pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:20px}
+.pin-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border2);transition:all .2s}
+.pin-dot.filled{background:var(--blue);border-color:var(--blue);box-shadow:0 0 8px var(--blue-glow)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pin-key{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:20px;font-weight:700;color:var(--txt);border:none}
+.pin-key:active{background:var(--bg4)}
+.pin-key.del{color:var(--red2);font-size:13px}
+.pin-err{color:var(--red2);font-size:12px;margin-top:6px;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pin-hint{font-size:10px;color:var(--txt3);margin-top:8px}
+.pin-setup{font-size:11px;color:var(--blue2);cursor:pointer;margin-top:6px}
+
+/* LICENCE SCREENS */
+#licenceblock,#licencesetup{position:fixed;inset:0;background:#070810;z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px}
+#licenceblock .brand,#licencesetup .brand{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:.12em;background:linear-gradient(135deg,#ff1744,#ff5252);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#licencesetup .brand{background:linear-gradient(135deg,var(--blue),#8c9eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lc-sub{font-size:9px;color:#4a5080;letter-spacing:.3em;text-transform:uppercase}
+.lc-box{background:#0c0d1a;border:1px solid rgba(255,23,68,.25);border-radius:16px;padding:24px 20px;max-width:340px;width:100%}
+#licencesetup .lc-box{border-color:rgba(61,90,254,.25)}
+.lc-icon{font-size:40px;margin-bottom:10px}
+.lc-title{font-size:18px;font-weight:800;margin-bottom:8px}
+.lc-box input{background:#111225;border:1px solid #262850;border-radius:8px;padding:12px 14px;font-size:13px;color:#e8eaf6;width:100%;text-align:center;font-family:monospace;letter-spacing:.15em;outline:none}
+.lc-box input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(61,90,254,.25)}
+.lc-btn{width:100%;padding:13px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-size:13px;font-weight:700;margin-top:12px}
+.lc-btn:active{transform:scale(.97)}
+.lc-err{color:#ff5252;font-size:11px;margin-top:6px;display:none}
+.lc-info{font-size:11px;color:#8892b0;line-height:1.6;max-width:300px;margin:0 auto}
+.lc-contact{font-size:10px;color:#8892b0;line-height:1.5}
+
+/* HEADER */
+.header{display:flex;align-items:center;gap:8px;padding:8px 12px;padding-top:max(8px,var(--safe-t));background:var(--bg2);border-bottom:1px solid var(--border);position:relative;z-index:100;flex-shrink:0}
+.brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.1em;background:linear-gradient(135deg,var(--blue),#8c9eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex-shrink:0}
+.brand-badge{font-size:7px;background:var(--blue);color:#fff;padding:1px 5px;border-radius:3px;font-weight:700;flex-shrink:0}
+.hdr-info{flex:1;min-width:0}
+.hdr-date{font-size:10px;color:var(--txt);font-weight:600;line-height:1.2}
+.hdr-sub{font-size:8px;color:var(--txt3)}
+.gym-name-display{font-size:9px;color:var(--blue2);font-weight:600;padding:3px 8px;background:var(--blue-glow);border-radius:5px;border:1px solid rgba(61,90,254,.3);white-space:nowrap}
+.hdr-actions{display:flex;gap:4px}
+.hdr-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:9px;color:var(--txt2);white-space:nowrap}
+.hdr-btn:active{border-color:var(--blue);color:var(--txt)}
+.hdr-btn.danger{border-color:rgba(255,23,68,.3);color:var(--red2)}
+.hdr-btn.danger:active{background:var(--red-bg)}
+
+/* MAIN CONTENT */
+#app{display:none;flex-direction:column;height:100dvh;width:100%;position:fixed;top:0;left:0;right:0;bottom:0}
+#app.active{display:flex}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px;padding-bottom:calc(64px + var(--safe-b));-webkit-overflow-scrolling:touch;overscroll-behavior:none}
+.tab-pane{display:none}.tab-pane.active{display:block}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
+.stat-card.blue::before{background:linear-gradient(90deg,var(--blue),var(--blue2))}
+.stat-card.green::before{background:linear-gradient(90deg,var(--green),#00bfa5)}
+.stat-card.red::before{background:linear-gradient(90deg,var(--red),var(--orange))}
+.stat-card.gold::before{background:linear-gradient(90deg,var(--gold),var(--yellow))}
+.stat-icon{font-size:18px;margin-bottom:6px;display:block}
+.stat-lbl{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.stat-val{font-size:20px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.stat-sub{font-size:10px;color:var(--txt3);margin-top:4px}
+.stat-trend{font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;display:inline-block;margin-top:3px}
+.stat-trend.up{background:var(--green-bg);color:var(--green2)}
+.stat-trend.down{background:var(--red-bg);color:var(--red2)}
+
+/* MONEY FLOW */
+.money-flow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px}
+.mf-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.mf-lbl{font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:4px}
+.mf-val{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.mf-sub{font-size:8px;color:var(--txt3);margin-top:2px}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.card-head{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg3)}
+.card-title{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--txt2);display:flex;align-items:center;gap:6px;text-transform:uppercase}
+.card-actions{display:flex;gap:6px;align-items:center}
+.card-body{padding:10px 12px}
+.empty-state{padding:32px 20px;text-align:center;color:var(--txt3);font-size:12px}
+.empty-icon{font-size:32px;margin-bottom:8px;display:block;opacity:.4}
+.link-btn{font-size:10px;color:var(--blue2);background:none;border:none;padding:4px 8px}
+.link-btn:active{color:var(--txt)}
+
+/* ALERT ROWS */
+.alert-row{display:flex;align-items:center;gap:10px;padding:9px 10px;background:var(--bg3);border-radius:8px;margin-bottom:6px;border:1px solid var(--border)}
+.alert-row.exp{border-color:rgba(255,23,68,.2)}
+.alert-row.soon{border-color:rgba(255,215,64,.2)}
+.avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;font-size:11px;width:32px;height:32px}
+.sbadge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:16px;white-space:nowrap}
+.ren-btn{font-size:10px;padding:5px 10px;border-radius:5px;border:1px solid rgba(61,90,254,.4);background:rgba(61,90,254,.12);color:var(--blue2);font-weight:700;white-space:nowrap;border:none}
+.ren-btn:active{background:rgba(61,90,254,.25)}
+
+/* BILAN */
+.brow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.brow:last-child{border:none}
+.bar-wrap{margin-top:4px}
+.bar-bg{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:2px}
+.bar-fill{height:100%;border-radius:2px;transition:width .5s}
+
+/* FILTERS */
+.toolbar{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.search-wrap{flex:1;position:relative}
+.search-wrap .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:13px;pointer-events:none}
+#csearch{padding-left:30px;font-size:12px;padding:9px 10px 9px 30px}
+.filters{display:flex;gap:4px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.filters::-webkit-scrollbar{display:none}
+.fbtn{font-size:10px;padding:5px 12px;border-radius:16px;border:1px solid var(--border);background:transparent;color:var(--txt3);white-space:nowrap;flex-shrink:0}
+.fbtn:active{color:var(--txt2)}
+.fbtn.active{border-color:var(--blue);background:rgba(61,90,254,.12);color:var(--txt);font-weight:600}
+
+/* CLIENT CARDS (replaces table on mobile) */
+.client-list{display:flex;flex-direction:column;gap:6px}
+.client-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.client-card:active{border-color:var(--border2)}
+.client-card-main{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer}
+.client-card-info{flex:1;min-width:0}
+.client-card-name{font-size:13px;font-weight:700;color:var(--txt)}
+.client-card-plan{font-size:9px;color:var(--txt3);margin-top:1px}
+.client-card-meta{text-align:right;flex-shrink:0}
+.client-card-amount{font-size:14px;font-weight:700}
+.client-card-end{font-size:9px;color:var(--txt3)}
+.client-card-detail{padding:8px 12px 10px;border-top:1px solid var(--border);background:rgba(61,90,254,.03);display:flex;gap:6px;flex-wrap:wrap}
+.cd-btn{font-size:10px;padding:5px 10px;border-radius:5px;border:1px solid var(--border2);background:var(--bg3);color:var(--txt);border:none;font-weight:600}
+.cd-btn:active{background:var(--bg4)}
+.cd-btn.danger{border-color:rgba(255,23,68,.3);background:var(--red-bg);color:var(--red2)}
+.cd-btn.primary{border-color:var(--blue);background:rgba(61,90,254,.12);color:var(--blue2)}
+
+/* FORM BOTTOM SHEET */
+.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;display:none;backdrop-filter:blur(4px)}
+.sheet-overlay.show{display:block}
+.sheet{position:fixed;bottom:0;left:0;right:0;z-index:401;background:var(--bg2);border-radius:16px 16px 0 0;padding:16px;padding-bottom:calc(16px + var(--safe-b));max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s;border-top:1px solid var(--border2)}
+.sheet.show{transform:translateY(0)}
+.sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 12px}
+.sheet-title{font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.sheet .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sheet .field{margin-bottom:6px}
+.sheet .field label{font-size:9px;color:var(--txt3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.07em}
+.sheet .field.full{grid-column:1/-1}
+.sheet .field input,.sheet .field select{font-size:12px;padding:10px 12px}
+.sheet .factions{display:flex;gap:8px;margin-top:12px}
+.sheet .sub-btn{flex:1;padding:11px;border-radius:8px;border:none;background:var(--blue);font-size:12px;color:#fff;font-weight:700}
+.sheet .sub-btn:active{background:var(--blue2)}
+.sheet .ghost-btn{flex:1;padding:11px;border-radius:8px;border:1px solid var(--border);background:transparent;font-size:12px;color:var(--txt2)}
+.sheet .ghost-btn:active{background:var(--bg3)}
+.sheet .field select{padding:10px 12px}
+
+/* EXPENSES */
+.dep-hdr{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.dep-hdr select,.dep-hdr input{width:auto;padding:7px 10px;font-size:11px;flex:1}
+.dep-hdr #dep-total{font-size:11px;font-weight:700;color:var(--txt2);white-space:nowrap}
+.dep-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-bottom:1px solid var(--border)}
+.dep-row:last-child{border-bottom:none}
+.dep-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.dep-lbl{font-size:11px;color:var(--txt);font-weight:500;flex:1;min-width:60px}
+.dep-bar{flex:1;max-width:80px}
+.dep-inp{width:90px!important;text-align:right;padding:7px 10px!important;font-size:12px!important;flex-shrink:0}
+.sgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.sc-lbl{font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.sc-val{font-size:14px;font-weight:700}
+
+/* CHARTS */
+.chart-area{height:90px;display:flex;align-items:flex-end;gap:6px;margin-bottom:8px}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.chart-bars-inner{width:100%;display:flex;gap:2px;align-items:flex-end;height:80px}
+.bar-r{border-radius:3px 3px 0 0;min-height:2px;transition:height .5s}
+.chart-lbl{font-size:7px;color:var(--txt3)}
+.chart-net{font-size:9px;font-weight:700}
+.legend{display:flex;gap:12px;justify-content:center;margin-bottom:10px}
+.li{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--txt3)}
+.ldot{width:8px;height:8px;border-radius:2px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+
+/* TABLE for reports */
+.twrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.thead{display:grid;padding:8px 10px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.thead span{font-size:8px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em}
+.trow{display:grid;padding:8px 10px;border-bottom:1px solid var(--border);align-items:center;font-size:10px}
+.trow:last-child{border-bottom:none}
+.tfooter{padding:8px 10px;background:var(--bg3);font-size:10px;color:var(--txt3);border-top:1px solid var(--border)}
+
+/* SALLES */
+.salle-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.salle-card:active{border-color:var(--blue)}
+.salle-card.active-salle{border-color:var(--blue);background:rgba(61,90,254,.06)}
+.salle-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.salle-status.on{background:var(--green);box-shadow:0 0 5px var(--green)}
+.salle-status.off{background:var(--red);box-shadow:0 0 5px var(--red)}
+.salle-info{flex:1;min-width:0}
+.salle-name{font-size:12px;font-weight:700}
+.salle-sub{font-size:9px;color:var(--txt3)}
+.salle-actions{display:flex;gap:4px}
+.toggle-btn{font-size:10px;padding:4px 10px;border-radius:5px;font-weight:700;border:none}
+.toggle-btn.on{background:rgba(255,23,68,.1);color:var(--red2)}
+.toggle-btn.off{background:rgba(0,230,118,.08);color:var(--green2)}
+.toggle-btn:active{opacity:.7}
+.salle-del{font-size:10px;padding:4px 8px;border-radius:5px;background:var(--red-bg);color:var(--red2);border:none}
+
+/* SETTINGS */
+.settings-section{margin-bottom:16px}
+.settings-title{font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-lbl{font-size:12px;color:var(--txt);font-weight:500}
+.setting-sub{font-size:10px;color:var(--txt3);margin-top:1px}
+.toggle-switch{width:36px;height:20px;background:var(--border2);border-radius:10px;position:relative;cursor:pointer;border:none;transition:background .2s;flex-shrink:0}
+.toggle-switch.on{background:var(--blue)}
+.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle-switch.on::after{left:18px}
+.danger-zone{background:rgba(255,23,68,.04);border:1px solid rgba(255,23,68,.2);border-radius:10px;padding:12px}
+.danger-btn{padding:7px 14px;border-radius:6px;border:1px solid rgba(255,23,68,.4);background:rgba(255,23,68,.1);font-size:11px;color:var(--red2);font-weight:700;border:none;width:100%}
+.danger-btn:active{background:rgba(255,23,68,.2)}
+.sub-btn{padding:9px 18px;border-radius:8px;border:none;background:var(--blue);font-size:11px;color:#fff;font-weight:700;width:100%}
+.sub-btn:active{background:var(--blue2)}
+
+/* BOTTOM TAB BAR */
+.tab-bar{flex-shrink:0;z-index:200;background:var(--bg2);border-top:1px solid var(--border);display:flex;padding:4px 0;padding-bottom:calc(4px + var(--safe-b))}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;background:none;border:none;color:var(--txt3);font-size:8px;font-weight:600;letter-spacing:.03em}
+.tab-btn .tab-icon{font-size:18px;line-height:1}
+.tab-btn.active{color:var(--blue)}
+.tab-btn.active .tab-icon{transform:scale(1.05)}
+.tab-badge{position:absolute;top:0;right:calc(50% - 18px);background:var(--red);color:#fff;border-radius:8px;padding:1px 5px;font-size:8px;font-weight:700;min-width:14px;text-align:center}
+.tab-btn-wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px}
+
+/* FAB */
+.fab{position:fixed;bottom:calc(70px + var(--safe-b));right:16px;z-index:150;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue2));border:none;color:#fff;font-size:24px;box-shadow:0 4px 16px rgba(61,90,254,.4);display:none;align-items:center;justify-content:center}
+.fab:active{transform:scale(.92)}
+.fab.show{display:flex}
+
+/* TOAST */
+#toast{position:fixed;bottom:calc(70px + var(--safe-b));left:16px;right:16px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--txt);z-index:9000;transform:translateY(100px);opacity:0;transition:all .3s;text-align:center;pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{border-color:rgba(0,230,118,.4);color:var(--green2)}
+#toast.error{border-color:rgba(255,23,68,.4);color:var(--red2)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;max-width:380px;width:100%;max-height:85vh;overflow-y:auto}
+.modal-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--txt2)}
+.modal-close{background:none;border:none;color:var(--txt3);font-size:16px;padding:4px}
+.modal-body{padding:16px}
+.receipt-print{background:#fff;color:#111;border-radius:8px;padding:16px;font-size:12px}
+.receipt-brand{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.15em;color:#1a237e;text-align:center}
+.receipt-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #eee;font-size:12px}
+.receipt-total{display:flex;justify-content:space-between;padding:6px 0 0;font-size:15px;font-weight:700;border-top:2px solid #111;margin-top:4px}
+.print-btn{background:#1a237e;color:#fff;border:none;border-radius:6px;padding:8px 16px;font-size:11px;font-weight:700;width:100%;margin-top:10px}
+
+/* PULSE */
+.pulse{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0;animation:pulse-anim 1.5s infinite}
+@keyframes pulse-anim{0%,100%{opacity:1}50%{opacity:.3}}
+.pulse.red{background:var(--red);box-shadow:0 0 0 0 rgba(255,23,68,.4);animation:pulse-ring 1.5s infinite}
+@keyframes pulse-ring{0%{box-shadow:0 0 0 0 rgba(255,23,68,.5)}70%{box-shadow:0 0 0 5px rgba(255,23,68,0)}100%{box-shadow:0 0 0 0 rgba(255,23,68,0)}}
+
+.mt2{margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- LICENCE BLOCK -->
+<div id="licenceblock">
+  <div class="brand">GYMPRO</div>
+  <div class="lc-sub">MAROC · SYSTÈME PRO</div>
+  <div class="lc-box">
+    <div class="lc-icon">🔒</div>
+    <div class="lc-title" style="color:#ff5252">ACCÈS SUSPENDU</div>
+    <div class="lc-info">Votre licence a expiré ou a été suspendue. Contactez GymPro Maroc pour renouveler.</div>
+    <div style="margin:12px 0;padding:8px;background:rgba(255,23,68,.06);border-radius:8px;text-align:left">
+      <div style="font-size:10px;color:#4a5080;margin-bottom:4px">🏋️ <span id="bl-gymname">—</span></div>
+      <div style="font-size:10px;color:#8892b0">Clé: <span id="bl-key" style="color:#5c6bff">—</span></div>
+      <div style="font-size:10px;color:#8892b0">Fin: <span id="bl-date" style="color:#ff5252">—</span></div>
+    </div>
+    <div class="lc-contact" id="bl-contact"></div>
+    <button class="lc-btn" onclick="checkLicenceManual()" style="background:linear-gradient(135deg,#ff1744,#ff5252)">🔄 VÉRIFIER MA LICENCE</button>
+  </div>
+</div>
+
+<!-- LICENCE SETUP -->
+<div id="licencesetup">
+  <div class="brand">GYMPRO</div>
+  <div class="lc-sub">MAROC · SYSTÈME PRO</div>
+  <div class="lc-box">
+    <div class="lc-icon">🔑</div>
+    <div class="lc-title">ACTIVATION DU SYSTÈME</div>
+    <div class="lc-info" style="margin-bottom:12px">Entrez votre clé de licence pour activer le système.</div>
+    <input id="setup-key" type="text" placeholder="GP-XXXX-XXXX-XXXX" maxlength="17" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"/>
+    <div class="lc-err" id="setup-err">❌ Format invalide. Utilisez GP-XXXX-XXXX-XXXX</div>
+    <button class="lc-btn" onclick="activateLicence()">ACTIVER LE SYSTÈME</button>
+  </div>
+</div>
+
+<!-- LOCK SCREEN -->
+<div id="lockscreen">
+  <div class="lock-logo">GYMPRO</div>
+  <div class="lock-sub">MAROC · SYSTÈME PRO</div>
+  <div class="lock-box">
+    <div class="lock-title" id="lock-title">ENTREZ VOTRE CODE PIN</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-pad">
+      <button class="pin-key" onclick="pinKey('1')">1</button>
+      <button class="pin-key" onclick="pinKey('2')">2</button>
+      <button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button>
+      <button class="pin-key" onclick="pinKey('5')">5</button>
+      <button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button>
+      <button class="pin-key" onclick="pinKey('8')">8</button>
+      <button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key" onclick="pinKey('0')" style="grid-column:2">0</button>
+      <button class="pin-key del" onclick="pinDel()">⌫</button>
+    </div>
+    <div class="pin-err hidden" id="pin-err"></div>
+    <div class="pin-hint" id="pin-hint"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="brand">GYMPRO</span>
+    <span class="brand-badge">PRO</span>
+    <span class="gym-name-display" id="gymNameDisplay">Chargement...</span>
+    <div class="hdr-info">
+      <div class="hdr-date" id="hdr-date"></div>
+      <div class="hdr-sub" id="hdr-sub">Système mobile</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="hdr-btn" onclick="openAdminMode()">🛠</button>
+      <button class="hdr-btn danger" onclick="lockApp()">🔒</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-pane active" id="tab-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card blue"><span class="stat-icon">💪</span><div class="stat-lbl">Membres Actifs</div><div class="stat-val" id="s-act">—</div><div class="stat-sub" id="s-act-sub"></div></div>
+        <div class="stat-card gold"><span class="stat-icon">⏳</span><div class="stat-lbl">Expirent Bientôt</div><div class="stat-val" id="s-soon">—</div></div>
+        <div class="stat-card red"><span class="stat-icon">🚫</span><div class="stat-lbl">Expirés</div><div class="stat-val" id="s-exp">—</div></div>
+        <div class="stat-card green"><span class="stat-icon">📈</span><div class="stat-lbl">Bénéfice / Mois</div><div class="stat-val" id="s-net">—</div><div class="stat-sub" id="s-net-sub"></div></div>
+      </div>
+      <div class="money-flow">
+        <div class="mf-card"><div class="mf-lbl">💰 Encaissé</div><div class="mf-val" id="mf-enc">—</div></div>
+        <div class="mf-card"><div class="mf-lbl">🔄 En cours</div><div class="mf-val" id="mf-circ">—</div></div>
+        <div class="mf-card"><div class="mf-lbl">📊 Panier</div><div class="mf-val" id="mf-avg">—</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title"><span class="pulse red" id="alert-pulse"></span> ALERTES</span>
+          <span class="card-actions"><span class="nbadge" id="alert-cnt" style="background:var(--red);color:#fff;border-radius:8px;padding:1px 6px;font-size:9px;font-weight:700">0</span></span>
+        </div>
+        <div class="card-body" id="alert-list"><div class="empty-state"><span class="empty-icon">✅</span>Tout est en ordre</div></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">📋 BILAN DU MOIS</span></div>
+          <div class="card-body">
+            <div class="brow"><span>Revenus</span><span id="b-rev" style="font-weight:700;color:var(--green2)">0 DH</span></div>
+            <div class="brow"><span>Dépenses</span><span id="b-dep" style="font-weight:700;color:var(--red2)">0 DH</span></div>
+            <div class="brow"><span style="font-weight:700">Bénéfice</span><span id="b-net" style="font-weight:700;color:var(--blue2)">0 DH</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">⚡ PERFORMANCE</span></div>
+          <div class="card-body">
+            <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:1px"><span>Actifs</span><span style="color:var(--green2);font-weight:600" id="p-ap">0%</span></div><div class="bar-bg"><div class="bar-fill" id="p-ab" style="width:0%;background:var(--green)"></div></div></div>
+            <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:1px"><span>Expirés</span><span style="color:var(--red2);font-weight:600" id="p-ep">0%</span></div><div class="bar-bg"><div class="bar-fill" id="p-eb" style="width:0%;background:var(--red)"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:1px"><span>Rétention</span><span style="color:var(--blue2);font-weight:600" id="p-ret">0%</span></div><div class="bar-bg"><div class="bar-fill" id="p-retb" style="width:0%;background:var(--blue)"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="tab-pane" id="tab-clients">
+      <div class="toolbar">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input id="csearch" placeholder="Rechercher..." oninput="renderClients()"/></div>
+      </div>
+      <div class="filters" id="client-filters">
+        <button class="fbtn active" onclick="setFilter('all',this)">Tous <span id="f-cnt-all"></span></button>
+        <button class="fbtn" onclick="setFilter('active',this)">Actifs</button>
+        <button class="fbtn" onclick="setFilter('soon',this)">Bientôt</button>
+        <button class="fbtn" onclick="setFilter('expired',this)">Expirés</button>
+        <button class="fbtn" onclick="setFilter('today',this)">Aujourd'hui</button>
+      </div>
+      <div id="ctbody" class="client-list"></div>
+      <div class="tfooter" id="ctfoot" style="display:none;padding:8px 10px;background:var(--bg3);font-size:10px;color:var(--txt3);border-radius:8px;margin-top:6px;text-align:center"></div>
+    </div>
+
+    <!-- DEPENSES -->
+    <div class="tab-pane" id="tab-depenses">
+      <div class="dep-hdr">
+        <select id="dep-m" onchange="renderDep()"></select>
+        <input id="dep-y" type="number" value="2025" onchange="renderDep()" style="max-width:70px"/>
+        <span id="dep-total">0 DH</span>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">💸 DÉPENSES</span><button class="link-btn" onclick="saveDepenses()">💾 Sauvegarder</button></div>
+        <div class="card-body" id="dep-rows"></div>
+      </div>
+      <div class="sgrid">
+        <div class="sc"><div class="sc-lbl">💵 Revenus</div><div class="sc-val" id="sum-rev" style="color:var(--green2)">0</div></div>
+        <div class="sc"><div class="sc-lbl">💸 Dépenses</div><div class="sc-val" id="sum-dep" style="color:var(--red2)">0</div></div>
+        <div class="sc"><div class="sc-lbl">📈 Bénéfice</div><div class="sc-val" id="sum-net" style="color:var(--blue2)">0</div></div>
+      </div>
+    </div>
+
+    <!-- RAPPORTS -->
+    <div class="tab-pane" id="tab-rapports">
+      <div class="card">
+        <div class="card-head"><span class="card-title">📊 REVENUS VS DÉPENSES — 6 MOIS</span></div>
+        <div class="card-body">
+          <div class="chart-area" id="chart-bars"></div>
+          <div class="legend"><span class="li"><span class="ldot" style="background:var(--blue)"></span>Revenus</span><span class="li"><span class="ldot" style="background:var(--red)"></span>Dépenses</span></div>
+        </div>
+      </div>
+      <div class="twrap" style="margin-bottom:10px">
+        <div class="thead" style="grid-template-columns:1fr 1fr 1fr 1fr"><span>MOIS</span><span>REVENUS</span><span>DÉPENSES</span><span>BÉNÉFICE</span></div>
+        <div id="rep-body"></div>
+      </div>
+      <div class="grid3">
+        <div class="sc"><div class="sc-lbl">Total Membres</div><div class="sc-val" id="g-total" style="color:var(--blue2)">0</div></div>
+        <div class="sc"><div class="sc-lbl">Total Encaissé</div><div class="sc-val" id="g-rev" style="color:var(--green2)">0</div></div>
+        <div class="sc"><div class="sc-lbl">Panier Moyen</div><div class="sc-val" id="g-avg" style="color:var(--yellow)">0</div></div>
+        <div class="sc"><div class="sc-lbl">Meilleur Mois</div><div class="sc-val" id="g-best" style="font-size:11px;color:var(--gold)">—</div></div>
+        <div class="sc"><div class="sc-lbl">Rétention</div><div class="sc-val" id="g-ret" style="color:var(--green2)">0%</div></div>
+        <div class="sc"><div class="sc-lbl">Durée Moy.</div><div class="sc-val" id="g-dur" style="font-size:11px;color:var(--blue2)">—</div></div>
+      </div>
+    </div>
+
+    <!-- SALLES -->
+    <div class="tab-pane" id="tab-salles">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">🏪 MES SALLES</span>
+          <button class="link-btn" onclick="showAddSalle()">+ Ajouter</button>
+        </div>
+        <div class="card-body">
+          <div style="font-size:10px;color:var(--txt3);margin-bottom:10px;padding:8px 10px;background:rgba(61,90,254,.06);border:1px solid rgba(61,90,254,.15);border-radius:6px">💡 Gérez plusieurs salles. Coupez l'accès si nécessaire.</div>
+          <div id="salles-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="tab-pane" id="tab-settings">
+      <div class="settings-section">
+        <div class="settings-title">🏪 Identité</div>
+        <div class="grid2" style="gap:6px">
+          <div><label style="font-size:9px;color:var(--txt3);display:block;margin-bottom:2px">Nom</label><input id="set-gymname"/></div>
+          <div><label style="font-size:9px;color:var(--txt3);display:block;margin-bottom:2px">Slogan</label><input id="set-slogan"/></div>
+        </div>
+        <div class="grid2" style="gap:6px;margin-top:6px">
+          <div><label style="font-size:9px;color:var(--txt3);display:block;margin-bottom:2px">Adresse</label><input id="set-addr"/></div>
+          <div><label style="font-size:9px;color:var(--txt3);display:block;margin-bottom:2px">Téléphone</label><input id="set-tel" type="tel"/></div>
+        </div>
+        <button class="sub-btn" onclick="saveSettings()" style="margin-top:8px">💾 Sauvegarder</button>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">🔐 Code PIN</div>
+        <div class="grid2" style="gap:6px">
+          <div><label style="font-size:9px;color:var(--txt3);display:block;margin-bottom:2px">Nouveau PIN</label><input id="new-pin" type="password" maxlength="4" inputmode="numeric" pattern="[0-9]*"/></div>
+          <div><label style="font-size:9px;color:var(--txt3);display:block;margin-bottom:2px">Confirmer</label><input id="new-pin2" type="password" maxlength="4" inputmode="numeric" pattern="[0-9]*"/></div>
+        </div>
+        <button class="sub-btn" onclick="changePIN()" style="margin-top:6px">Changer le PIN</button>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">🔔 Notifications</div>
+        <div class="setting-row"><div><div class="setting-lbl">Alerte 7 jours</div><div class="setting-sub">Rappeler 7j avant expiration</div></div><button class="toggle-switch on" id="notif-7" onclick="toggleSetting(this)"></button></div>
+        <div class="setting-row"><div><div class="setting-lbl">Alerte expiration</div><div class="setting-sub">Notifier le jour de l'expiration</div></div><button class="toggle-switch on" id="notif-exp" onclick="toggleSetting(this)"></button></div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">💾 Données</div>
+        <button class="sub-btn" onclick="exportData()" style="margin-bottom:6px">⬇ Exporter les données</button>
+        <label style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-size:11px;color:var(--txt2);text-align:center;cursor:pointer">📂 Importer un fichier<input type="file" accept=".json" onchange="importData(event)" style="display:none"/></label>
+      </div>
+      <div class="settings-section" id="install-section">
+        <div class="settings-title">📲 Installer l'App</div>
+        <div id="install-content">
+          <div id="install-android" class="hidden" style="text-align:center;padding:6px">
+            <div style="font-size:11px;color:var(--txt2);margin-bottom:8px">Installe GymPro sur ton téléphone comme une vraie application</div>
+            <button class="sub-btn" onclick="installApp()" style="width:100%">📲 Installer</button>
+          </div>
+          <div id="install-ios" class="hidden" style="text-align:center;padding:6px">
+            <div style="font-size:11px;color:var(--txt2);margin-bottom:6px">Sur iPhone/iPad :</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;font-size:10px;color:var(--txt)">
+              <span style="background:var(--bg3);padding:5px 8px;border-radius:6px;white-space:nowrap">1. Tape <b>Partager</b> <span style="font-size:14px">⬆️</span></span>
+              <span style="background:var(--bg3);padding:5px 8px;border-radius:6px;white-space:nowrap">2. <b>Sur l'écran d'accueil</b></span>
+              <span style="background:var(--bg3);padding:5px 8px;border-radius:6px;white-space:nowrap">3. <b>Ajouter</b></span>
+            </div>
+            <div style="font-size:10px;color:var(--txt3);margin-top:6px">L'icône apparaîtra sur ton écran d'accueil</div>
+          </div>
+          <div id="install-ok" class="hidden" style="text-align:center;padding:10px;font-size:12px;color:var(--green2)">✅ App installée</div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-title">⚠️ Zone Danger</div>
+        <div class="danger-zone">
+          <div style="font-size:11px;color:var(--red2);font-weight:600;margin-bottom:6px">🗑 Tout supprimer</div>
+          <div style="font-size:10px;color:var(--txt3);margin-bottom:8px">Efface toutes les données : clients, dépenses, salles, paramètres.</div>
+          <button class="danger-btn" onclick="resetAll()">TOUT SUPPRIMER</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- FAB -->
+  <button class="fab" id="fab" onclick="toggleForm()">+</button>
+
+  <!-- BOTTOM TAB BAR -->
+  <div class="tab-bar" id="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('dashboard')"><span class="tab-icon">📊</span>Stats</button>
+    <button class="tab-btn" onclick="switchTab('clients')"><span class="tab-icon">👥</span>Clients</button>
+    <button class="tab-btn" onclick="switchTab('depenses')"><span class="tab-icon">💸</span>Compta</button>
+    <button class="tab-btn" onclick="switchTab('raports')" id="rap-tab"><span class="tab-icon">📈</span>Rapports</button>
+    <button class="tab-btn" onclick="switchTab('salles')"><span class="tab-icon">🏪</span>Salles</button>
+    <button class="tab-btn" onclick="switchTab('settings')"><span class="tab-icon">⚙️</span>Réglages</button>
+  </div>
+
+</div><!-- /app -->
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- CLIENT FORM (BOTTOM SHEET) -->
+<div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="client-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" id="ftitle">+ NOUVEAU CLIENT</div>
+  <div class="fgrid">
+    <div class="field"><label>Nom complet</label><input id="f-name" placeholder="Ex: Ahmed Benali"/></div>
+    <div class="field"><label>Téléphone</label><input id="f-phone" type="tel" placeholder="06XX-XXXXXX"/></div>
+    <div class="field"><label>Date début</label><input id="f-date" type="date"/></div>
+    <div class="field"><label>Montant (DH)</label><input id="f-amount" type="number" placeholder="500"/></div>
+    <div class="field"><label>Durée (mois)</label><select id="f-dur"><option value="1">1 mois</option><option value="2">2 mois</option><option value="3" selected>3 mois</option><option value="6">6 mois</option><option value="12">12 mois</option></select></div>
+    <div class="field"><label>Forfait</label><select id="f-plan"><option value="standard">Standard</option><option value="premium">Premium</option><option value="etudiant">Étudiant</option><option value="vip">VIP</option></select></div>
+    <div class="field"><label>Sport</label><select id="f-sport"><option value="muscu">Musculation</option><option value="cardio">Cardio</option><option value="crossfit">CrossFit</option><option value="yoga">Yoga</option><option value="boxe">Boxe</option><option value="autre">Autre</option></select></div>
+    <div class="field"><label>Notes</label><input id="f-notes" placeholder="Optionnel"/></div>
+  </div>
+  <div class="factions">
+    <button class="ghost-btn" onclick="closeSheet()">Annuler</button>
+    <button class="sub-btn" onclick="submitClient()">💾 Enregistrer</button>
+  </div>
+</div>
+
+<!-- RECEIPT MODAL -->
+<div class="modal-overlay" id="receipt-modal">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title">🧾 REÇU</span><button class="modal-close" onclick="closeModal('receipt-modal')">✕</button></div>
+    <div class="modal-body">
+      <div class="receipt-print" id="receipt-content"></div>
+      <button class="print-btn" onclick="printReceipt()">🖨 IMPRIMER</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT DETAIL MODAL -->
+<div class="modal-overlay" id="client-modal">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title">👤 FICHE CLIENT</span><button class="modal-close" onclick="closeModal('client-modal')">✕</button></div>
+    <div class="modal-body" id="client-modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ───
+var deferredPrompt=null,isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),isStandalone=window.matchMedia('(display-mode:standalone)').matches||window.navigator.standalone||false;
+window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferredPrompt=e; var s=document.getElementById('install-section'); if(s)s.classList.remove('hidden'); });
+window.addEventListener('appinstalled',function(){ deferredPrompt=null; var s=document.getElementById('install-section'); if(s)s.innerHTML='<div style="font-size:12px;color:var(--green2);padding:10px">App installee</div>'; });
+var clients=JSON.parse(localStorage.getItem('gp_clients')||'[]');
+var expenses=JSON.parse(localStorage.getItem('gp_expenses')||'{}');
+var salles=JSON.parse(localStorage.getItem('gp_salles')||'[]');
+var settings=JSON.parse(localStorage.getItem('gp_settings')||'{}');
+var editingId=null;
+var activeFilter='all';
+
+var CATS=[
+  {key:'loyer',label:'Loyer',icon:'🏠'},
+  {key:'electricite',label:'Électricité',icon:'⚡'},
+  {key:'eau',label:'Eau',icon:'💧'},
+  {key:'gaz',label:'Gaz',icon:'🔥'},
+  {key:'internet',label:'Internet',icon:'📶'},
+  {key:'salaires',label:'Salaires',icon:'👤'},
+  {key:'maintenance',label:'Maintenance',icon:'🔧'},
+  {key:'publicite',label:'Publicité',icon:'📢'},
+  {key:'fournitures',label:'Fournitures',icon:'📦'},
+  {key:'assurance',label:'Assurance',icon:'🛡'},
+  {key:'autre',label:'Autre',icon:'📌'}
+];
+var MONTHS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+var MSHORT=['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'];
+var ACOLS=['#3d5afe','#7c4dff','#00897b','#e64a19','#ad1457','#1565c0','#2e7d32'];
+var PLAN_LABELS={standard:'Standard',premium:'Premium',etudiant:'Étudiant',vip:'VIP'};
+var SPORT_LABELS={muscu:'Musculation',cardio:'Cardio',crossfit:'CrossFit',yoga:'Yoga',boxe:'Boxe',autre:'Autre'};
+var pinInput='',pinMode='check',pinStep=0,newPinTemp='';
+
+// ─── LICENCE ───
+function getLicenceKey(){ return localStorage.getItem('gp_licence_key')||''; }
+function checkLicenceStatus(){
+  var key=getLicenceKey();
+  if(!key){
+    try{
+      var bridge=JSON.parse(window.name);
+      if(bridge&&bridge.licenceKey){
+        key=bridge.licenceKey;
+        localStorage.setItem('gp_licence_key',key);
+        if(bridge.ctrl) localStorage.setItem('gp_ctrl_'+key,JSON.stringify(bridge.ctrl));
+        return {status:bridge.ctrl.status||'active',endDate:bridge.ctrl.endDate||'',salleName:bridge.ctrl.salleName||'',key:key};
+      }
+    }catch(e){}
+    return {status:'no_key'};
+  }
+  var raw=localStorage.getItem('gp_ctrl_'+key);
+  if(!raw){
+    try{
+      var bridge=JSON.parse(window.name);
+      if(bridge&&bridge.licenceKey===key&&bridge.ctrl){
+        localStorage.setItem('gp_ctrl_'+key,JSON.stringify(bridge.ctrl));
+        return {status:bridge.ctrl.status||'active',endDate:bridge.ctrl.endDate||'',salleName:bridge.ctrl.salleName||'',key:key};
+      }
+    }catch(e){}
+    return {status:'active',endDate:'',salleName:'',key:key};
+  }
+  try{
+    var ctrl=JSON.parse(raw);
+    return {status:ctrl.status||'active',endDate:ctrl.endDate||'',salleName:ctrl.salleName||'',key:key};
+  }catch(e){ return {status:'active',key:key}; }
+}
+function fmtDateLic(s){
+  if(!s) return '—';
+  var p=s.split('-');
+  return p.length===3 ? p[2]+'/'+p[1]+'/'+p[0] : s;
+}
+function activateLicence(){
+  var inp=document.getElementById('setup-key');
+  var key=inp.value.trim().toUpperCase();
+  if(!/^GP-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)){
+    document.getElementById('setup-err').style.display='block';
+    inp.style.borderColor='#ff1744';
+    return;
+  }
+  localStorage.setItem('gp_licence_key',key);
+  document.getElementById('licencesetup').style.display='none';
+  initLicence();
+}
+function checkLicenceManual(){
+  var lic=checkLicenceStatus();
+  if(lic.status==='active'){
+    document.getElementById('licenceblock').style.display='none';
+    initLock();
+  } else {
+    var el=document.getElementById('licenceblock'); el.style.animation='shake .3s'; setTimeout(function(){ el.style.animation=''; },300);
+    showToast('Toujours bloqué','error');
+  }
+}
+function showBlockScreen(lic){
+  document.getElementById('bl-gymname').textContent=lic.salleName||'—';
+  document.getElementById('bl-key').textContent=lic.key;
+  document.getElementById('bl-date').textContent=fmtDateLic(lic.endDate);
+  document.getElementById('bl-contact').innerHTML='📧 <span style="color:#5c6bff">contact@gympro.ma</span><br>📞 <span style="color:#5c6bff">+212 6XX-XXXXXX</span>';
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('lockscreen').style.display='none';
+  document.getElementById('licenceblock').style.display='flex';
+}
+function initLicence(){
+  var key=getLicenceKey();
+  if(!key){
+    try{
+      var bridge=JSON.parse(window.name);
+      if(bridge&&bridge.licenceKey){
+        key=bridge.licenceKey;
+        localStorage.setItem('gp_licence_key',key);
+        if(bridge.ctrl) localStorage.setItem('gp_ctrl_'+key,JSON.stringify(bridge.ctrl));
+      }
+    }catch(e){}
+  }
+  if(!key){ document.getElementById('licencesetup').style.display='flex'; return; }
+  var lic=checkLicenceStatus();
+  if(lic.status==='blocked'){ showBlockScreen(lic); return; }
+  if(lic.endDate){
+    var now=new Date(); now.setHours(0,0,0,0);
+    var end=new Date(lic.endDate); end.setHours(0,0,0,0);
+    if(end<now){ showBlockScreen(lic); return; }
+  }
+  initLock();
+}
+setInterval(function(){
+  var lic=checkLicenceStatus();
+  if(lic.status==='blocked'){ lockApp(); setTimeout(function(){ showBlockScreen(lic); },500); }
+},3600000);
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'){
+    var lic=checkLicenceStatus();
+    if(lic.status==='blocked'&&!document.getElementById('licenceblock').style.display!=='none'){ lockApp(); setTimeout(function(){ showBlockScreen(lic); },300); }
+  }
+});
+window.onload=function(){ initLicence(); };
+
+// ─── PIN ───
+function initLock(){
+  if(settings.pin&&settings.setupDone){ pinMode='check'; document.getElementById('lock-title').textContent='ENTREZ VOTRE CODE PIN'; document.getElementById('pin-hint').textContent=''; }
+  else { pinMode='setup'; pinStep=0; document.getElementById('lock-title').textContent='CRÉEZ UN CODE PIN (4 chiffres)'; document.getElementById('pin-hint').textContent='Pour sécuriser l\'accès à votre système'; }
+  pinInput=''; updatePinDots(); document.getElementById('pin-err').classList.add('hidden');
+  document.getElementById('lockscreen').style.display='flex'; document.getElementById('app').classList.remove('active');
+}
+function pinKey(d){
+  if(pinInput.length>=4) return;
+  pinInput+=d; updatePinDots();
+  if(pinInput.length===4) setTimeout(checkPin,150);
+}
+function pinDel(){
+  if(pinInput.length===0) return;
+  pinInput=pinInput.slice(0,-1); updatePinDots();
+}
+function updatePinDots(){
+  for(var i=0;i<4;i++) document.getElementById('d'+i).classList.toggle('filled',i<pinInput.length);
+}
+function checkPin(){
+  if(pinMode==='check'){
+    if(pinInput===settings.pin){ document.getElementById('lockscreen').style.display='none'; document.getElementById('app').classList.add('active'); initApp(); }
+    else { showPinErr('Code PIN incorrect'); }
+  } else {
+    if(pinStep===0){ newPinTemp=pinInput; pinStep=1; pinInput=''; updatePinDots(); document.getElementById('lock-title').textContent='CONFIRMEZ LE CODE PIN'; document.getElementById('pin-hint').textContent='Entrez le même code une seconde fois'; }
+    else {
+      if(pinInput===newPinTemp){ settings.pin=pinInput; settings.setupDone=true; save(); document.getElementById('lockscreen').style.display='none'; document.getElementById('app').classList.add('active'); initApp(); }
+      else { showPinErr('Les codes ne correspondent pas'); pinStep=0; pinInput=''; updatePinDots(); document.getElementById('lock-title').textContent='CRÉEZ UN CODE PIN (4 chiffres)'; document.getElementById('pin-hint').textContent='Pour sécuriser l\'accès à votre système'; }
+    }
+  }
+}
+function showPinErr(msg){
+  var el=document.getElementById('pin-err'); el.textContent=msg; el.classList.remove('hidden');
+  pinInput=''; updatePinDots();
+}
+function lockApp(){
+  if(!confirm('🔒 Verrouiller l\'application ?')) return;
+  document.getElementById('app').classList.remove('active');
+  initLock();
+}
+
+// ─── CORE ───
+function save(){
+  localStorage.setItem('gp_clients',JSON.stringify(clients));
+  localStorage.setItem('gp_expenses',JSON.stringify(expenses));
+  localStorage.setItem('gp_salles',JSON.stringify(salles));
+  localStorage.setItem('gp_settings',JSON.stringify(settings));
+}
+function pad(n){ return n<10?'0'+n:''+n; }
+function todayStr(){ var d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function addMonths(s,n){ var p=s.split('-'),d=new Date(p[0],p[1]-1,p[2]); d.setMonth(d.getMonth()+n); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function fmtDate(s){ if(!s) return ''; var p=s.split('-'); return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:s; }
+function initials(n){ var p=n.trim().split(' '); return (p[0][0]+(p[1]?p[1][0]:'')).toUpperCase(); }
+function acolor(n){ var c=0; for(var i=0;i<n.length;i++) c+=n.charCodeAt(i); return ACOLS[c%ACOLS.length]; }
+function fmtN(n){ return Number(n).toLocaleString('fr-FR'); }
+function expKey(y,m){ return y+'-'+pad(m+1); }
+function totalExp(y,m){ var k=expKey(y,m),e=expenses[k]; if(!e) return 0; var t=0; for(var i=0;i<CATS.length;i++) t+=Number(e[CATS[i].key])||0; return t; }
+function monthRev(y,m){ var t=0; for(var i=0;i<clients.length;i++) if(clients[i].createdAt){ var d=new Date(clients[i].createdAt); if(d.getFullYear()===y&&d.getMonth()===m) t+=Number(clients[i].amount)||0; } return t; }
+function cStatus(c){
+  if(!c||!c.endDate) return {label:'—',color:'var(--txt3)',ring:'var(--border)',bg:'transparent',pri:-1,diff:999};
+  var now=new Date(); now.setHours(0,0,0,0);
+  var end=new Date(c.endDate); end.setHours(0,0,0,0);
+  var diff=Math.ceil((end-now)/86400000);
+  if(diff<0) return {label:'Expiré',color:'var(--red2)',ring:'rgba(255,23,68,.3)',bg:'var(--red-bg)',pri:0,diff:diff};
+  if(diff===0) return {label:'Auj. fin',color:'var(--red2)',ring:'var(--red-bg)',bg:'var(--red-bg)',pri:1,diff:0};
+  if(diff<=7) return {label:'Dans '+diff+'j',color:'var(--yellow)',ring:'rgba(255,215,64,.3)',bg:'var(--yellow-bg)',pri:2,diff:diff};
+  if(diff<=30) return {label:'Dans '+diff+'j',color:'var(--green2)',ring:'rgba(0,230,118,.3)',bg:'var(--green-bg)',pri:3,diff:diff};
+  return {label:'Actif',color:'var(--green2)',ring:'rgba(0,230,118,.3)',bg:'var(--green-bg)',pri:4,diff:diff};
+}
+
+// ─── ADMIN BRIDGE ───
+function openAdminMode(){
+  var url = window.location.href.replace('GymPro_Salle_Mobile.html', 'GymPro_ADMIN_Panel.html');
+  if(url === window.location.href) url = 'GymPro_ADMIN_Panel.html';
+  var key = getLicenceKey();
+  if(key){
+    var raw = localStorage.getItem('gp_ctrl_' + key);
+    if(raw){
+      try{ var ctrl = JSON.parse(raw); window.name = JSON.stringify({licenceKey: key, ctrl: ctrl}); } catch(e){}
+    }
+  }
+  window.location.href = url;
+}
+
+// ─── INIT APP ───
+function initApp(){
+  if(!settings.gymName){ settings.gymName='GymPro Maroc'; settings.slogan=''; settings.addr='Casablanca'; settings.tel=''; }
+  if(!settings.pin) settings.pin='1234';
+  if(!settings.setupDone) settings.setupDone=true;
+  document.getElementById('gymNameDisplay').textContent=settings.gymName||'GymPro';
+  updateClock();
+  setInterval(updateClock,60000);
+  document.getElementById('set-gymname').value=settings.gymName||'';
+  document.getElementById('set-slogan').value=settings.slogan||'';
+  document.getElementById('set-addr').value=settings.addr||'';
+  document.getElementById('set-tel').value=settings.tel||'';
+  var m=document.getElementById('dep-m');
+  for(var i=0;i<12;i++){ var o=document.createElement('option'); o.value=i; o.textContent=MONTHS[i]; m.appendChild(o); }
+  m.value=new Date().getMonth();
+  document.getElementById('dep-y').value=new Date().getFullYear();
+  renderDash(); renderSalles();
+}
+function updateClock(){
+  var d=new Date();
+  document.getElementById('hdr-date').textContent=d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+}
+
+// ─── NAV ───
+var currentTab='dashboard';
+function switchTab(name){
+  currentTab=name;
+  var tabMap={dashboard:'tab-dashboard',clients:'tab-clients',depenses:'tab-depenses',raports:'tab-rapports',salles:'tab-salles',settings:'tab-settings'};
+  var validTab=tabMap[name]||'tab-dashboard';
+  document.querySelectorAll('.tab-pane').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById(validTab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){
+    if(b.getAttribute('onclick').indexOf(name)>-1) b.classList.add('active');
+  });
+  var fab=document.getElementById('fab');
+  if(name==='clients') fab.classList.add('show'); else fab.classList.remove('show');
+  if(name==='clients') renderClients();
+  else if(name==='depenses') renderDep();
+  else if(name==='raports') renderRap();
+  else if(name==='salles') renderSalles();
+  else if(name==='dashboard') renderDash();
+  document.getElementById('content').scrollTop=0;
+}
+
+// ─── DASHBOARD ───
+function renderDash(){
+  var now=new Date(); now.setHours(0,0,0,0);
+  var active=0,soon=0,expired=0,revMonth=0,circ=0,alerts=[];
+  for(var i=0;i<clients.length;i++){
+    var c=clients[i],st=cStatus(c);
+    if(st.pri>=2&&st.pri<4) active++;
+    if(st.pri===1) active++;
+    if(st.diff<=7&&st.diff>=0) soon++;
+    if(st.diff<0) expired++;
+    if(st.diff<=7&&st.diff>=0) alerts.push(c);
+    if(c.startDate&&c.endDate){
+      var s=new Date(c.startDate),e=new Date(c.endDate);
+      if(s<=now&&e>=now) revMonth+=Number(c.amount)||0;
+    }
+    circ+=Number(c.amount)||0;
+  }
+  var y=now.getFullYear(),m=now.getMonth();
+  var dep=totalExp(y,m),rev=monthRev(y,m),net=rev-dep;
+  document.getElementById('s-act').textContent=active;
+  document.getElementById('s-act-sub').textContent='sur '+clients.length+' membres';
+  document.getElementById('s-soon').textContent=soon;
+  document.getElementById('s-exp').textContent=expired;
+  document.getElementById('s-net').textContent=fmtN(net)+' DH';
+  document.getElementById('s-net-sub').textContent=dep>0?'Après '+fmtN(dep)+' DH dépenses':'Aucune dépense';
+  document.getElementById('mf-enc').textContent=fmtN(rev)+' DH';
+  document.getElementById('mf-circ').textContent=fmtN(circ)+' DH';
+  document.getElementById('mf-avg').textContent=clients.length?fmtN(Math.round(circ/clients.length))+' DH':'0 DH';
+  var al=document.getElementById('alert-list');
+  if(alerts.length===0) al.innerHTML='<div class="empty-state"><span class="empty-icon">✅</span>Tout est en ordre</div>';
+  else {
+    var h='';
+    for(var i=0;i<Math.min(alerts.length,5);i++){
+      var c=alerts[i],st=cStatus(c);
+      h+='<div class="alert-row '+(st.diff<0?'exp':'soon')+'"><div class="avatar" style="background:'+acolor(c.name)+'">'+initials(c.name)+'</div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+c.name+'</div><div style="font-size:9px;color:var(--txt3)">'+fmtDate(c.endDate)+' · '+(PLAN_LABELS[c.plan]||c.plan)+'</div></div><span class="sbadge" style="color:'+st.color+'">'+st.label+'</span><button class="ren-btn" onclick="openRenew(\''+c.id+'\')">Renouveler</button></div>';
+    }
+    al.innerHTML=h;
+  }
+  document.getElementById('alert-cnt').textContent=alerts.length;
+  var pulse=document.getElementById('alert-pulse'); if(alerts.length) pulse.style.display='inline-block'; else pulse.style.display='none';
+  document.getElementById('b-rev').textContent=fmtN(rev)+' DH';
+  document.getElementById('b-dep').textContent=fmtN(dep)+' DH';
+  document.getElementById('b-net').textContent=fmtN(net)+' DH';
+  var pActive=clients.length?Math.round(active/clients.length*100):0;
+  var pExp=clients.length?Math.round(expired/clients.length*100):0;
+  var retention=clients.length>10?Math.round((1-expired/clients.length)*100):100;
+  document.getElementById('p-ap').textContent=pActive+'%'; document.getElementById('p-ab').style.width=pActive+'%';
+  document.getElementById('p-ep').textContent=pExp+'%'; document.getElementById('p-eb').style.width=pExp+'%';
+  document.getElementById('p-ret').textContent=retention+'%'; document.getElementById('p-retb').style.width=retention+'%';
+}
+
+// ─── CLIENT RENDER ───
+function renderClients(){
+  var q=document.getElementById('csearch').value.toLowerCase();
+  var filtered=[];
+  for(var i=0;i<clients.length;i++){
+    var c=clients[i],st=cStatus(c);
+    var match=c.name.toLowerCase().indexOf(q)>-1||(c.phone||'').indexOf(q)>-1;
+    if(!match) continue;
+    if(activeFilter==='active'&&st.pri<1) continue;
+    if(activeFilter==='soon'&&(st.diff>7||st.diff<0)) continue;
+    if(activeFilter==='expired'&&st.diff>=0) continue;
+    if(activeFilter==='today'&&(!c.createdAt||c.createdAt.indexOf(todayStr().slice(0,10))!==0)) continue;
+    filtered.push(c);
+  }
+  filtered.sort(function(a,b){ return (cStatus(a).diff||999)-(cStatus(b).diff||999); });
+  var h='';
+  for(var i=0;i<filtered.length;i++){
+    var c=filtered[i],st=cStatus(c);
+    h+='<div class="client-card"><div class="client-card-main" onclick="showClientDetail(\''+c.id+'\')"><div class="avatar" style="background:'+acolor(c.name)+'">'+initials(c.name)+'</div><div class="client-card-info"><div class="client-card-name">'+c.name+'</div><div class="client-card-plan">'+(PLAN_LABELS[c.plan]||c.plan)+' · '+(SPORT_LABELS[c.sport]||c.sport||'')+'</div></div><div class="client-card-meta"><div class="client-card-amount" style="color:'+st.color+'">'+fmtN(c.amount)+' DH</div><div class="client-card-end">'+st.label+'</div></div></div><div class="client-card-detail"><button class="cd-btn primary" onclick="event.stopPropagation();openRenew(\''+c.id+'\')">🔄 Renouveler</button><button class="cd-btn" onclick="event.stopPropagation();openEdit(\''+c.id+'\')">✏️ Modifier</button><button class="cd-btn danger" onclick="event.stopPropagation();deleteClient(\''+c.id+'\')">🗑 Supprimer</button></div></div>';
+  }
+  if(filtered.length===0) h='<div class="empty-state" style="padding:32px"><span class="empty-icon">👥</span>Aucun client trouvé</div>';
+  document.getElementById('ctbody').innerHTML=h;
+  document.getElementById('ctfoot').style.display='block';
+  document.getElementById('ctfoot').textContent=filtered.length+' client'+(filtered.length>1?'s':'')+' • '+fmtN(clients.length)+' total';
+  document.getElementById('f-cnt-all').textContent='('+clients.length+')';
+}
+
+function setFilter(f,btn){
+  activeFilter=f;
+  document.querySelectorAll('#client-filters .fbtn').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  renderClients();
+}
+
+// ─── CLIENT CRUD ───
+function toggleForm(c){
+  closeSheet();
+  editingId=null;
+  document.getElementById('ftitle').textContent='+ NOUVEAU CLIENT';
+  document.getElementById('f-name').value=''; document.getElementById('f-phone').value='';
+  document.getElementById('f-date').value=todayStr();
+  document.getElementById('f-amount').value=''; document.getElementById('f-dur').value='3';
+  document.getElementById('f-plan').value='standard'; document.getElementById('f-sport').value='muscu';
+  document.getElementById('f-notes').value='';
+  if(c){
+    if(typeof c==='string'){ var found=null; for(var i=0;i<clients.length;i++){ if(clients[i].id===c){ found=clients[i]; break; } } c=found; }
+    if(c){ editingId=c.id; document.getElementById('ftitle').textContent='✏️ MODIFIER CLIENT';
+      document.getElementById('f-name').value=c.name; document.getElementById('f-phone').value=c.phone||'';
+      document.getElementById('f-date').value=c.startDate; document.getElementById('f-amount').value=c.amount;
+      document.getElementById('f-dur').value=c.duration; document.getElementById('f-plan').value=c.plan;
+      document.getElementById('f-sport').value=c.sport||'muscu'; document.getElementById('f-notes').value=c.notes||'';
+    }
+  }
+  document.getElementById('sheet-overlay').classList.add('show');
+  document.getElementById('client-sheet').classList.add('show');
+}
+function openEdit(id){ toggleForm(id); }
+function openRenew(id){
+  var c=null; for(var i=0;i<clients.length;i++){ if(clients[i].id===id){ c=clients[i]; break; } }
+  if(!c) return;
+  editingId=null;
+  document.getElementById('ftitle').textContent='🔄 RENOUVELLEMENT';
+  document.getElementById('f-name').value=c.name; document.getElementById('f-phone').value=c.phone||'';
+  var start=c.endDate&&new Date(c.endDate)>new Date()?c.endDate:todayStr();
+  document.getElementById('f-date').value=start;
+  document.getElementById('f-amount').value=c.amount; document.getElementById('f-dur').value=c.duration;
+  document.getElementById('f-plan').value=c.plan; document.getElementById('f-sport').value=c.sport||'muscu';
+  document.getElementById('f-notes').value='Renouvellement';
+  document.getElementById('sheet-overlay').classList.add('show');
+  document.getElementById('client-sheet').classList.add('show');
+}
+function closeSheet(){
+  document.getElementById('sheet-overlay').classList.remove('show');
+  document.getElementById('client-sheet').classList.remove('show');
+}
+function submitClient(){
+  var name=document.getElementById('f-name').value.trim();
+  var phone=document.getElementById('f-phone').value.trim();
+  var date=document.getElementById('f-date').value;
+  var amount=parseFloat(document.getElementById('f-amount').value);
+  var dur=parseInt(document.getElementById('f-dur').value);
+  var plan=document.getElementById('f-plan').value;
+  var sport=document.getElementById('f-sport').value;
+  var notes=document.getElementById('f-notes').value.trim();
+  if(!name||!date||!amount){ showToast('Remplissez tous les champs obligatoires','error'); return; }
+  var endDate=addMonths(date,dur);
+  if(editingId){
+    for(var i=0;i<clients.length;i++){
+      if(clients[i].id===editingId){
+        clients[i].name=name; clients[i].phone=phone; clients[i].startDate=date; clients[i].endDate=endDate;
+        clients[i].amount=amount; clients[i].duration=dur; clients[i].plan=plan; clients[i].sport=sport; clients[i].notes=notes;
+        break;
+      }
+    }
+  } else {
+    clients.push({id:Date.now()+'',name:name,phone:phone,startDate:date,endDate:endDate,amount:amount,duration:dur,plan:plan,sport:sport,notes:notes,createdAt:new Date().toISOString(),history:[]});
+  }
+  save(); closeSheet(); renderClients(); renderDash(); renderRap();
+  showToast('Client '+(editingId?'modifié ✓':'ajouté ✓'),'success');
+  editingId=null;
+}
+function deleteClient(id){
+  if(!confirm('🗑 Supprimer ce client ?')) return;
+  var idx=-1; for(var i=0;i<clients.length;i++){ if(clients[i].id===id){ idx=i; break; } }
+  if(idx>-1){ clients.splice(idx,1); save(); renderClients(); renderDash(); renderRap(); showToast('Client supprimé','error'); }
+}
+function showClientDetail(id){
+  var c=null; for(var i=0;i<clients.length;i++){ if(clients[i].id===id){ c=clients[i]; break; } }
+  if(!c) return;
+  var st=cStatus(c);
+  var h='<div class="cd-header" style="display:flex;align-items:center;gap:14px;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px"><div class="avatar" style="background:'+acolor(c.name)+';width:48px;height:48px;font-size:18px">'+initials(c.name)+'</div><div><div style="font-size:16px;font-weight:700">'+c.name+'</div><div style="font-size:11px;color:var(--txt3)">'+(PLAN_LABELS[c.plan]||c.plan)+' · '+(SPORT_LABELS[c.sport]||c.sport||'')+'</div></div></div>';
+  h+='<div class="grid2" style="gap:6px">';
+  h+=mkDetailCard('📞 Téléphone',c.phone||'—','');
+  h+=mkDetailCard('📅 Début',fmtDate(c.startDate),'');
+  h+=mkDetailCard('⏳ Fin',fmtDate(c.endDate),st.color);
+  h+=mkDetailCard('💰 Montant',fmtN(c.amount)+' DH','');
+  h+=mkDetailCard('📊 Statut',st.label,st.color);
+  h+=mkDetailCard('📝 Notes',c.notes||'—','');
+  h+='</div>';
+  if(c.history&&c.history.length>0){
+    h+='<div style="margin-top:12px"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:700">📜 Historique des paiements</div>';
+    for(var i=0;i<c.history.length;i++){
+      var hh=c.history[i];
+      h+='<div class="pay-row" style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px"><div class="pay-dot" style="background:var(--blue);width:6px;height:6px;border-radius:50%"></div><span style="flex:1">'+fmtDate(hh.date||'')+'</span><span>'+fmtN(hh.amount)+' DH</span><span style="color:var(--txt3)">'+(hh.duration||'')+' mois</span></div>';
+    }
+    h+='</div>';
+  }
+  document.getElementById('client-modal-body').innerHTML=h;
+  document.getElementById('client-modal').classList.add('show');
+}
+function mkDetailCard(lbl,sub,val){ return '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px"><div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em">'+lbl+'</div><div style="font-size:12px;font-weight:600;margin-top:2px'+(val?';color:'+val:'')+'">'+sub+'</div></div>'; }
+
+// ─── EXPENSES ───
+function renderDep(){
+  var m=parseInt(document.getElementById('dep-m').value);
+  var y=parseInt(document.getElementById('dep-y').value);
+  var k=expKey(y,m),e=expenses[k]||{};
+  var h='';
+  for(var i=0;i<CATS.length;i++){
+    var cat=CATS[i],val=e[cat.key]||'';
+    h+='<div class="dep-row"><span class="dep-icon">'+cat.icon+'</span><span class="dep-lbl">'+cat.label+'</span><div class="dep-bar"><div class="bar-bg"><div class="bar-fill" id="dep-bar-'+i+'" style="width:0%;background:var(--blue);border-radius:2px"></div></div></div><input class="dep-inp" type="number" value="'+val+'" oninput="liveDepTotal()" data-cat="'+cat.key+'" placeholder="0"/></div>';
+  }
+  document.getElementById('dep-rows').innerHTML=h;
+  liveDepTotal();
+}
+function liveDepTotal(){
+  var total=0;
+  document.querySelectorAll('#dep-rows .dep-inp').forEach(function(inp){ total+=Number(inp.value)||0; });
+  document.getElementById('dep-total').textContent=fmtN(total)+' DH';
+  var catVals=[];
+  document.querySelectorAll('#dep-rows .dep-inp').forEach(function(inp,i){ catVals.push({val:Number(inp.value)||0,cat:CATS[i]}); });
+  var max=1; catVals.forEach(function(x){ if(x.val>max) max=x.val; });
+  catVals.forEach(function(x,i){ var el=document.getElementById('dep-bar-'+i); if(el) el.style.width=(max>0?Math.round(x.val/max*100):0)+'%'; });
+  var m=parseInt(document.getElementById('dep-m').value),y=parseInt(document.getElementById('dep-y').value);
+  var rev=monthRev(y,m),dep=total,net=rev-dep;
+  document.getElementById('sum-rev').textContent=fmtN(rev)+' DH';
+  document.getElementById('sum-dep').textContent=fmtN(dep)+' DH';
+  document.getElementById('sum-net').textContent=fmtN(net)+' DH';
+}
+function saveDepenses(){
+  var m=parseInt(document.getElementById('dep-m').value);
+  var y=parseInt(document.getElementById('dep-y').value);
+  var k=expKey(y,m),e={};
+  document.querySelectorAll('#dep-rows .dep-inp').forEach(function(inp){ e[inp.dataset.cat]=inp.value||'0'; });
+  expenses[k]=e; save();
+  showToast('Dépenses sauvegardées ✓','success');
+  renderRap(); renderDash();
+}
+
+// ─── REPORTS ───
+function renderRap(){
+  var now=new Date(),cy=now.getFullYear(),cm=now.getMonth();
+  var months=[],maxV=1;
+  for(var i=5;i>=0;i--){
+    var idx=cm-i,mi=(idx%12+12)%12,yi=cy+Math.floor((idx-(idx%12+12)%12)/12);
+    if(idx<0){ mi=12+idx; yi=cy-1; }
+    var rev=monthRev(yi,mi),dep=totalExp(yi,mi);
+    months.push({mi:mi,yi:yi,rev:rev,dep:dep,net:rev-dep});
+    if(rev>maxV) maxV=rev;
+    if(dep>maxV) maxV=dep;
+  }
+  var chart='';
+  for(var i=months.length-1;i>=0;i--){
+    var m=months[i];
+    var rh=Math.round(m.rev/maxV*100),dh=Math.round(m.dep/maxV*100);
+    if(rh<2&&m.rev>0) rh=2; if(dh<2&&m.dep>0) dh=2;
+    chart+='<div class="chart-col"><div class="chart-bars-inner"><div class="bar-r" style="height:'+rh+'%;background:var(--blue)" title="Revenus: '+m.rev+'"></div><div class="bar-r" style="height:'+dh+'%;background:var(--red)" title="Dépenses: '+m.dep+'"></div></div><div class="chart-lbl">'+MSHORT[m.mi]+'</div><div class="chart-net" style="color:'+(m.net>=0?'var(--green2)':'var(--red2)')+'">'+fmtN(m.net)+'</div></div>';
+  }
+  document.getElementById('chart-bars').innerHTML=chart;
+  var tbody='';
+  var totalM=0,totalRev=0,totalClients=0,bestM='—',bestRev=0,ret=100,sumDur=0,dc=0;
+  for(var i=5;i>=0;i--){
+    var idx=cm-i,mi=(idx%12+12)%12,yi=cy+Math.floor((idx-(idx%12+12)%12)/12);
+    if(idx<0){ mi=12+idx; yi=cy-1; }
+    var rev=monthRev(yi,mi),dep=totalExp(yi,mi),net=rev-dep;
+    totalRev+=rev; totalM+=dep;
+    var cnt=0; for(var j=0;j<clients.length;j++){ if(clients[j].createdAt){ var d=new Date(clients[j].createdAt); if(d.getFullYear()===yi&&d.getMonth()===mi) cnt++; } }
+    totalClients+=cnt;
+    if(rev>bestRev){ bestRev=rev; bestM=MSHORT[mi]+' '+yi; }
+    tbody+='<div class="trow" style="grid-template-columns:1fr 1fr 1fr 1fr"><span style="font-weight:600">'+MSHORT[mi]+' '+yi+'</span><span style="color:var(--green2)">'+fmtN(rev)+'</span><span style="color:var(--red2)">'+fmtN(dep)+'</span><span style="color:'+(net>=0?'var(--green2)':'var(--red2)')+';font-weight:700">'+fmtN(net)+'</span></div>';
+  }
+  document.getElementById('rep-body').innerHTML=tbody;
+  var expCount=0; for(var j=0;j<clients.length;j++){ if(cStatus(clients[j]).diff<0) expCount++; }
+  ret=clients.length>10?Math.round((1-expCount/clients.length)*100):100;
+  for(var j=0;j<clients.length;j++){ if(clients[j].duration){ sumDur+=clients[j].duration; dc++; } }
+  document.getElementById('g-total').textContent=clients.length;
+  document.getElementById('g-rev').textContent=fmtN(totalRev)+' DH';
+  document.getElementById('g-avg').textContent=clients.length?fmtN(Math.round(totalRev/clients.length))+' DH':'0 DH';
+  document.getElementById('g-best').textContent=bestM;
+  document.getElementById('g-ret').textContent=ret+'%';
+  document.getElementById('g-dur').textContent=dc?Math.round(sumDur/dc)+' mois':'—';
+}
+
+// ─── SALLES ───
+function renderSalles(){
+  var h='';
+  for(var i=0;i<salles.length;i++){
+    var s=salles[i];
+    h+='<div class="salle-card'+(s.active?' active-salle':'')+'"><div class="salle-status '+(s.active?'on':'off')+'"></div><div class="salle-info"><div class="salle-name">'+s.name+'</div><div class="salle-sub">'+(s.addr||'')+(s.resp?' · '+s.resp:'')+'</div></div><div class="salle-actions"><button class="toggle-btn '+(s.active?'on':'off')+'" onclick="toggleSalle('+i+')">'+(s.active?'Bloquer':'Activer')+'</button><button class="salle-del" onclick="deleteSalle('+i+')">🗑</button></div></div>';
+  }
+  if(salles.length===0) h='<div class="empty-state"><span class="empty-icon">🏪</span>Aucune salle ajoutée</div>';
+  document.getElementById('salles-list').innerHTML=h;
+}
+function showAddSalle(){
+  var name=prompt('Nom de la salle :'); if(!name) return;
+  var addr=prompt('Adresse :')||'';
+  var resp=prompt('Responsable :')||'';
+  salles.push({id:Date.now()+'',name:name,addr:addr,tel:'',resp:resp,active:true});
+  save(); renderSalles();
+}
+function toggleSalle(i){
+  salles[i].active=!salles[i].active; save(); renderSalles();
+}
+function deleteSalle(i){
+  if(!confirm('Supprimer cette salle ?')) return;
+  salles.splice(i,1); save(); renderSalles();
+}
+
+// ─── SETTINGS ───
+function saveSettings(){
+  settings.gymName=document.getElementById('set-gymname').value.trim()||settings.gymName;
+  settings.slogan=document.getElementById('set-slogan').value.trim()||'';
+  settings.addr=document.getElementById('set-addr').value.trim()||'';
+  settings.tel=document.getElementById('set-tel').value.trim()||'';
+  document.getElementById('gymNameDisplay').textContent=settings.gymName;
+  save(); showToast('Paramètres sauvegardés ✓','success');
+}
+function changePIN(){
+  var p1=document.getElementById('new-pin').value;
+  var p2=document.getElementById('new-pin2').value;
+  if(!p1||!p2){ showToast('Entrez le nouveau PIN dans les deux champs','error'); return; }
+  if(p1!==p2){ showToast('Les codes ne correspondent pas','error'); return; }
+  if(p1.length!==4||!/^\d{4}$/.test(p1)){ showToast('Le PIN doit faire 4 chiffres','error'); return; }
+  settings.pin=p1; settings.setupDone=true; save();
+  document.getElementById('new-pin').value=''; document.getElementById('new-pin2').value='';
+  showToast('PIN modifié ✓','success');
+}
+function toggleSetting(btn){ btn.classList.toggle('on'); }
+
+// ─── EXPORT ───
+function exportData(){
+  var data=JSON.stringify({clients:clients,expenses:expenses,salles:salles,settings:{gymName:settings.gymName,slogan:settings.slogan,addr:settings.addr,tel:settings.tel},exportDate:new Date().toISOString(),version:'2.0'});
+  var blob=new Blob([data],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url; a.download='gympro-backup-'+todayStr()+'.json'; a.click();
+  showToast('Backup exporté ✓','success');
+}
+function importData(e){
+  var file=e.target.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var d=JSON.parse(ev.target.result);
+      if(d.clients){ clients=d.clients; }
+      if(d.expenses){ expenses=d.expenses; }
+      if(d.salles){ salles=d.salles; }
+      if(d.settings){ settings.gymName=d.settings.gymName||settings.gymName; settings.slogan=d.settings.slogan||settings.slogan; settings.addr=d.settings.addr||settings.addr; settings.tel=d.settings.tel||settings.tel; }
+      save(); renderAll(); showToast('Import réussi ✓','success');
+    } catch(err){ showToast('Fichier invalide','error'); }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+function renderAll(){ renderDash(); renderClients(); renderSalles(); renderRap(); }
+function resetAll(){
+  if(!confirm('⚠️ TOUT SUPPRIMER ?\n\nCette action est irréversible.')) return;
+  if(!confirm('⚠️ Confirmez-vous la suppression de toutes les données ?')) return;
+  clients=[]; expenses={}; salles=[];
+  localStorage.removeItem('gp_clients'); localStorage.removeItem('gp_expenses'); localStorage.removeItem('gp_salles');
+  renderAll(); showToast('Toutes les données ont été supprimées','error');
+}
+
+// ─── RECEIPT ───
+function showReceipt(id){
+  var c=null; for(var i=0;i<clients.length;i++){ if(clients[i].id===id){ c=clients[i]; break; } }
+  if(!c) return;
+  var d=new Date();
+  var h='<div class="receipt-header" style="text-align:center;border-bottom:2px dashed #ccc;padding-bottom:12px;margin-bottom:12px"><div class="receipt-brand">GYMPRO</div><div style="font-size:10px;color:#666;margin-top:2px">'+settings.gymName+'</div><div style="font-size:9px;color:#999">'+d.toLocaleDateString('fr-FR')+'</div></div>';
+  h+='<div class="receipt-row"><span>Client</span><span style="font-weight:600">'+c.name+'</span></div>';
+  h+='<div class="receipt-row"><span>Forfait</span><span>'+(PLAN_LABELS[c.plan]||c.plan)+'</span></div>';
+  h+='<div class="receipt-row"><span>Durée</span><span>'+c.duration+' mois</span></div>';
+  h+='<div class="receipt-row"><span>Début</span><span>'+fmtDate(c.startDate)+'</span></div>';
+  h+='<div class="receipt-row"><span>Fin</span><span>'+fmtDate(c.endDate)+'</span></div>';
+  h+='<div class="receipt-total"><span>TOTAL</span><span>'+fmtN(c.amount)+' DH</span></div>';
+  document.getElementById('receipt-content').innerHTML=h;
+  document.getElementById('receipt-modal').classList.add('show');
+}
+function printReceipt(){
+  var content=document.getElementById('receipt-content').innerHTML;
+  var w=window.open('','','width=400,height=600');
+  w.document.write('<html><head><style>body{font-family:sans-serif;padding:20px;color:#111}table{width:100%}td{padding:4px 0;border-bottom:1px dashed #ccc}.tot{font-size:20px;font-weight:700;border-top:2px solid #111}.brand{font-size:32px;font-weight:700;color:#1a237e;text-align:center}</style></head><body>'+content+'</body></html>');
+  w.document.close(); w.focus(); w.print();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+// ─── INSTALL ───
+function installApp(){
+  if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(function(r){ if(r.outcome==='accepted'){ document.getElementById('install-content').innerHTML='<div style=\"text-align:center;padding:10px;font-size:12px;color:var(--green2)\">App installee</div>'; } }); }
+}
+function updateInstallUI(){
+  if(isStandalone){ document.getElementById('install-content').innerHTML='<div style=\"text-align:center;padding:10px;font-size:12px;color:var(--green2)\">App installee</div>'; return; }
+  if(isiOS){ document.getElementById('install-ios').classList.remove('hidden'); return; }
+  if(deferredPrompt){ document.getElementById('install-android').classList.remove('hidden'); }
+}
+setTimeout(updateInstallUI,500);
+
+// ─── TOAST ───
+function showToast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.className='show '+(type||'');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(function(){ t.className=''; },2800);
+}
+</script>
+<script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
+</body>
+</html>
