@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GymPro — Smarter Gym Management</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#070810;color:#e8eaf6;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;background:rgba(7,8,16,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(30,32,64,.5)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.12em;background:linear-gradient(135deg,#3d5afe,#8c9eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:#8892b0;text-decoration:none;font-size:13px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:#e8eaf6}
+.nav-links .btn{background:#3d5afe;color:#fff;padding:8px 20px;border-radius:8px;font-weight:600}
+.nav-links .btn:hover{background:#5c6bff}
+.lang-toggle{background:none;border:1px solid #1e2040;color:#8892b0;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.lang-toggle:hover{border-color:#3d5afe;color:#e8eaf6}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 40%,rgba(61,90,254,.08) 0%,transparent 50%),radial-gradient(circle at 70% 60%,rgba(0,230,118,.05) 0%,transparent 50%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(61,90,254,.1);border:1px solid rgba(61,90,254,.2);padding:6px 14px;border-radius:20px;font-size:11px;color:#8c9eff;margin-bottom:24px;font-weight:500}
+.hero h1{font-size:clamp(36px,7vw,72px);font-weight:900;line-height:1.08;margin-bottom:20px;max-width:800px}
+.hero h1 .hl{background:linear-gradient(135deg,#3d5afe,#00e676);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:clamp(16px,2vw,20px);color:#8892b0;max-width:600px;margin-bottom:36px;line-height:1.6}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.hero-btns .btn{text-decoration:none;padding:14px 32px;border-radius:10px;font-weight:600;font-size:15px;transition:all .2s}
+.btn-primary{background:#3d5afe;color:#fff}
+.btn-primary:hover{background:#5c6bff;transform:translateY(-2px);box-shadow:0 8px 30px rgba(61,90,254,.3)}
+.btn-secondary{background:rgba(255,255,255,.05);color:#e8eaf6;border:1px solid rgba(255,255,255,.1)}
+.btn-secondary:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
+.hero-mockup{margin-top:48px;max-width:320px;border-radius:20px;border:1px solid rgba(255,255,255,.05);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+
+/* SECTIONS */
+section{padding:80px 24px}
+.section-label{font-size:11px;font-weight:600;color:#3d5afe;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px;text-align:center}
+.section-title{font-size:clamp(24px,4vw,40px);font-weight:800;text-align:center;margin-bottom:12px}
+.section-sub{font-size:16px;color:#8892b0;text-align:center;max-width:600px;margin:0 auto 48px;line-height:1.6}
+.container{max-width:1100px;margin:0 auto}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.feature-card{background:linear-gradient(135deg,#0c0d1a,#111225);border:1px solid #1e2040;border-radius:14px;padding:28px 24px;transition:all .3s}
+.feature-card:hover{border-color:#3d5afe;transform:translateY(-4px);box-shadow:0 12px 40px rgba(61,90,254,.1)}
+.feature-icon{font-size:32px;margin-bottom:12px}
+.feature-card h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.feature-card p{font-size:13px;color:#8892b0;line-height:1.6}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start}
+.plan-card{background:linear-gradient(135deg,#0c0d1a,#111225);border:1px solid #1e2040;border-radius:14px;padding:32px 24px;text-align:center;transition:all .3s;position:relative}
+.plan-card.featured{border-color:#3d5afe;box-shadow:0 0 0 1px #3d5afe,0 12px 40px rgba(61,90,254,.15)}
+.plan-card.featured::before{content:'POPULAIRE';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#3d5afe;color:#fff;font-size:9px;font-weight:700;padding:3px 14px;border-radius:10px;letter-spacing:.1em}
+.plan-name{font-size:14px;font-weight:600;color:#8892b0;margin-bottom:4px}
+.plan-price{font-size:42px;font-weight:900;margin-bottom:4px}
+.plan-price span{font-size:16px;font-weight:400;color:#8892b0}
+.plan-desc{font-size:13px;color:#8892b0;margin-bottom:20px;line-height:1.5}
+.plan-features{list-style:none;margin-bottom:24px;text-align:left}
+.plan-features li{padding:6px 0;font-size:13px;display:flex;align-items:center;gap:8px}
+.plan-features li::before{content:'✓';color:#00e676;font-weight:700}
+.plan-btn{display:inline-block;padding:12px 32px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;transition:all .2s;width:100%}
+.plan-btn.primary{background:#3d5afe;color:#fff}
+.plan-btn.primary:hover{background:#5c6bff}
+.plan-btn.secondary{background:rgba(255,255,255,.05);color:#e8eaf6;border:1px solid rgba(255,255,255,.1)}
+.plan-btn.secondary:hover{background:rgba(255,255,255,.1)}
+
+/* HOW IT WORKS */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;counter-reset:step}
+.step{text-align:center;padding:24px;position:relative}
+.step-num{width:48px;height:48px;border-radius:50%;background:#3d5afe;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:18px;font-weight:800;color:#fff}
+.step h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.step p{font-size:13px;color:#8892b0;line-height:1.5}
+
+/* TESTIMONIALS */
+.testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.testimonial-card{background:linear-gradient(135deg,#0c0d1a,#111225);border:1px solid #1e2040;border-radius:12px;padding:24px}
+.testimonial-card .text{font-size:13px;color:#8892b0;line-height:1.6;margin-bottom:16px;font-style:italic}
+.testimonial-card .author{display:flex;align-items:center;gap:10px}
+.testimonial-card .author .avatar{width:36px;height:36px;border-radius:50%;background:#3d5afe;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.testimonial-card .author .info{font-size:13px;font-weight:600}
+.testimonial-card .author .info span{display:block;font-size:11px;color:#8892b0;font-weight:400}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:800px;margin:0 auto}
+.contact-info{display:flex;flex-direction:column;gap:16px}
+.contact-item{display:flex;align-items:center;gap:12px;font-size:14px;color:#8892b0}
+.contact-item .icon{width:40px;height:40px;border-radius:10px;background:rgba(61,90,254,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.contact-form{display:flex;flex-direction:column;gap:12px}
+.contact-form input,.contact-form textarea{background:#0c0d1a;border:1px solid #1e2040;border-radius:8px;padding:12px 14px;color:#e8eaf6;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.contact-form input:focus,.contact-form textarea:focus{border-color:#3d5afe}
+.contact-form textarea{height:120px;resize:vertical}
+.contact-form button{background:#3d5afe;color:#fff;border:none;padding:12px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s}
+.contact-form button:hover{background:#5c6bff}
+
+/* FOOTER */
+footer{padding:40px 24px;border-top:1px solid #1e2040;text-align:center}
+footer .brand{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.12em;background:linear-gradient(135deg,#3d5afe,#8c9eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+footer p{font-size:12px;color:#4a5080}
+footer .links{display:flex;justify-content:center;gap:16px;margin-top:12px}
+footer .links a{color:#4a5080;text-decoration:none;font-size:12px;transition:color .2s}
+footer .links a:hover{color:#8892b0}
+
+/* MOBILE */
+@media(max-width:768px){
+  .nav-links a{display:none}
+  .nav-links .btn,.nav-links .lang-toggle{display:inline-flex}
+  .contact-grid{grid-template-columns:1fr}
+  .hero h1{font-size:32px}
+  .pricing-grid{grid-template-columns:1fr}
+}
+
+/* LANGS */
+[lang="fr"]{display:none}
+body.fr [lang="en"]{display:none}
+body.fr [lang="fr"]{display:block}
+body.fr [lang="en"].keep{display:block}
+body.fr [lang="fr"].keep{display:inline}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">GYMPRO</div>
+  <div class="nav-links">
+    <a href="#features" lang="en">Features</a>
+    <a href="#features" lang="fr">Fonctionnalités</a>
+    <a href="#pricing" lang="en">Pricing</a>
+    <a href="#pricing" lang="fr">Tarifs</a>
+    <a href="#contact" lang="en">Contact</a>
+    <a href="#contact" lang="fr">Contact</a>
+    <button class="lang-toggle" onclick="toggleLang()" lang="en" class="keep">🇫🇷 FR</button>
+    <button class="lang-toggle" onclick="toggleLang()" lang="fr" class="keep">🇬🇧 EN</button>
+    <a href="GymPro_Salle_Mobile.html" class="btn" lang="en" target="_blank">Try Demo</a>
+    <a href="GymPro_Salle_Mobile.html" class="btn" lang="fr" target="_blank">Essayer</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge" lang="en">🚀 Used by gyms in 3 countries</div>
+  <div class="hero-badge" lang="fr">🚀 Utilisé dans 3 pays</div>
+  <h1 lang="en">Manage your gym. <span class="hl">From anywhere.</span></h1>
+  <h1 lang="fr">Gérez votre salle. <span class="hl">Partout.</span></h1>
+  <p lang="en">The complete management system for fitness clubs — clients, subscriptions, expenses, reports. Works on PC, phone, and tablet.</p>
+  <p lang="fr">Le système complet de gestion pour salles de sport — clients, abonnements, dépenses, rapports. Marche sur PC, téléphone et tablette.</p>
+  <div class="hero-btns">
+    <a href="GymPro_Salle_Mobile.html" class="btn btn-primary" target="_blank" lang="en">Try Live Demo</a>
+    <a href="GymPro_Salle_Mobile.html" class="btn btn-primary" target="_blank" lang="fr">Démo Live</a>
+    <a href="#pricing" class="btn btn-secondary" lang="en">See Pricing</a>
+    <a href="#pricing" class="btn btn-secondary" lang="fr">Voir les Tarifs</a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-label" lang="en">FEATURES</div>
+    <div class="section-label" lang="fr">FONCTIONNALITÉS</div>
+    <div class="section-title" lang="en">Everything you need to run your gym</div>
+    <div class="section-title" lang="fr">Tout pour gérer votre salle</div>
+    <div class="section-sub" lang="en">Track members, manage subscriptions, control expenses, and grow your business — all in one place.</div>
+    <div class="section-sub" lang="fr">Suivez vos membres, gérez les abonnements, contrôlez les dépenses et développez votre activité.</div>
+    <div class="features-grid">
+      <div class="feature-card"><div class="feature-icon">👥</div><h3 lang="en">Member Management</h3><h3 lang="fr">Gestion des Membres</h3><p lang="en">Add, edit, renew, filter members. Track subscriptions, payments, and expiration dates.</p><p lang="fr">Ajoutez, modifiez, renouvelez. Suivez les abonnements, paiements et dates d'expiration.</p></div>
+      <div class="feature-card"><div class="feature-icon">📊</div><h3 lang="en">Dashboard & Reports</h3><h3 lang="fr">Tableau de Bord</h3><p lang="en">Real-time stats, income vs expenses charts, performance indicators, monthly balance.</p><p lang="fr">Statistiques en direct, graphiques revenus/dépenses, indicateurs de performance.</p></div>
+      <div class="feature-card"><div class="feature-icon">💸</div><h3 lang="en">Expense Tracking</h3><h3 lang="fr">Suivi des Dépenses</h3><p lang="en">Log expenses by category (rent, electricity, staff, equipment). See your net profit.</p><p lang="fr">Enregistrez les dépenses par catégorie (loyer, électricité, staff, matériel). Bénéfice net.</p></div>
+      <div class="feature-card"><div class="feature-icon">🏪</div><h3 lang="en">Multi-Branch</h3><h3 lang="fr">Multi-Salles</h3><p lang="en">Manage multiple gym locations from one dashboard. Control access per branch.</p><p lang="fr">Gérez plusieurs salles depuis un tableau de bord. Contrôlez l'accès par salle.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔐</div><h3 lang="en">Secure & Private</h3><h3 lang="fr">Sécurisé</h3><p lang="en">PIN-protected access. Data stays on your devices. No cloud dependency.</p><p lang="fr">Accès protégé par code PIN. Données sur vos appareils. Pas de dépendance cloud.</p></div>
+      <div class="feature-card"><div class="feature-icon">📱</div><h3 lang="en">Works Everywhere</h3><h3 lang="fr">Marche Partout</h3><p lang="en">PC, Mac, iPhone, Android, tablet. Install as an app on your home screen.</p><p lang="fr">PC, Mac, iPhone, Android, tablette. Installable comme app sur l'écran d'accueil.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section style="background:linear-gradient(135deg,#0c0d1a,#111225)">
+  <div class="container">
+    <div class="section-label" lang="en">HOW IT WORKS</div>
+    <div class="section-label" lang="fr">FONCTIONNEMENT</div>
+    <div class="section-title" lang="en">Get started in minutes</div>
+    <div class="section-title" lang="fr">Prêt en 2 minutes</div>
+    <div class="section-sub" lang="en">No installation, no servers, no monthly fees.</div>
+    <div class="section-sub" lang="fr">Pas d'installation, pas de serveur, pas d'abonnement.</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h3 lang="en">Open the link</h3><h3 lang="fr">Ouvrez le lien</h3><p lang="en">We send you a secure link. Open it on any device.</p><p lang="fr">Nous vous envoyons un lien sécurisé. Ouvrez-le sur n'importe quel appareil.</p></div>
+      <div class="step"><div class="step-num">2</div><h3 lang="en">Set your PIN</h3><h3 lang="fr">Créez votre code PIN</h3><p lang="en">Create a 4-digit PIN to protect your data.</p><p lang="fr">Créez un code PIN à 4 chiffres pour protéger vos données.</p></div>
+      <div class="step"><div class="step-num">3</div><h3 lang="en">Start managing</h3><h3 lang="fr">Commencez à gérer</h3><p lang="en">Add members, track subscriptions, monitor your revenue.</p><p lang="fr">Ajoutez des membres, suivez les abonnements, surveillez vos revenus.</p></div>
+      <div class="step"><div class="step-num">4</div><h3 lang="en">Install as app</h3><h3 lang="fr">Installez comme app</h3><p lang="en">Add to home screen for a full-screen app experience.</p><p lang="fr">Ajoutez à l'écran d'accueil pour une expérience d'application.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-label" lang="en">PRICING</div>
+    <div class="section-label" lang="fr">TARIFS</div>
+    <div class="section-title" lang="en">Simple, transparent pricing</div>
+    <div class="section-title" lang="fr">Des prix simples et transparents</div>
+    <div class="section-sub" lang="en">One-time payment. No subscription. Free updates.</div>
+    <div class="section-sub" lang="fr">Paiement unique. Sans abonnement. Mises à jour gratuites.</div>
+    <div class="pricing-grid">
+      <div class="plan-card">
+        <div class="plan-name" lang="en">STARTER</div>
+        <div class="plan-name" lang="fr">DÉMARRAGE</div>
+        <div class="plan-price">$49 <span lang="en">once</span><span lang="fr">unique</span></div>
+        <div class="plan-desc" lang="en">Perfect for small gyms getting started.</div>
+        <div class="plan-desc" lang="fr">Idéal pour les petites salles.</div>
+        <ul class="plan-features">
+          <li lang="en">Up to 100 members</li><li lang="fr">Jusqu'à 100 membres</li>
+          <li lang="en">Dashboard & reports</li><li lang="fr">Tableau de bord & rapports</li>
+          <li lang="en">Expense tracking</li><li lang="fr">Suivi des dépenses</li>
+          <li lang="en">1 gym location</li><li lang="fr">1 salle</li>
+          <li lang="en">PIN security</li><li lang="fr">Sécurité PIN</li>
+        </ul>
+        <a href="#contact" class="plan-btn secondary" lang="en">Get Started</a>
+        <a href="#contact" class="plan-btn secondary" lang="fr">Commander</a>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-name" lang="en">PRO</div>
+        <div class="plan-name" lang="fr">PRO</div>
+        <div class="plan-price">$99 <span lang="en">once</span><span lang="fr">unique</span></div>
+        <div class="plan-desc" lang="en">For growing gyms with multiple branches.</div>
+        <div class="plan-desc" lang="fr">Pour les salles en croissance.</div>
+        <ul class="plan-features">
+          <li lang="en">Unlimited members</li><li lang="fr">Membres illimités</li>
+          <li lang="en">Dashboard & reports</li><li lang="fr">Tableau de bord & rapports</li>
+          <li lang="en">Expense tracking</li><li lang="fr">Suivi des dépenses</li>
+          <li lang="en">Multi-branch (up to 5)</li><li lang="fr">Multi-salles (jusqu'à 5)</li>
+          <li lang="en">Data sync across devices</li><li lang="fr">Synchro entre appareils</li>
+          <li lang="en">Priority support</li><li lang="fr">Support prioritaire</li>
+        </ul>
+        <a href="#contact" class="plan-btn primary" lang="en">Get Started</a>
+        <a href="#contact" class="plan-btn primary" lang="fr">Commander</a>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name" lang="en">ENTERPRISE</div>
+        <div class="plan-name" lang="fr">ENTREPRISE</div>
+        <div class="plan-price" lang="en">Custom</div>
+        <div class="plan-price" lang="fr">Sur mesure</div>
+        <div class="plan-desc" lang="en">For large chains and custom needs.</div>
+        <div class="plan-desc" lang="fr">Pour les grandes chaînes.</div>
+        <ul class="plan-features">
+          <li lang="en">Unlimited everything</li><li lang="fr">Tout illimité</li>
+          <li lang="en">Custom branding</li><li lang="fr">Marque personnalisée</li>
+          <li lang="en">API access</li><li lang="fr">Accès API</li>
+          <li lang="en">Dedicated support</li><li lang="fr">Support dédié</li>
+          <li lang="en">On-premise deployment</li><li lang="fr">Déploiement sur site</li>
+        </ul>
+        <a href="#contact" class="plan-btn secondary" lang="en">Contact Us</a>
+        <a href="#contact" class="plan-btn secondary" lang="fr">Contactez-nous</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="container">
+    <div class="section-label" lang="en">TESTIMONIALS</div>
+    <div class="section-label" lang="fr">TÉMOIGNAGES</div>
+    <div class="section-title" lang="en">Trusted by gym owners</div>
+    <div class="section-title" lang="fr">Ils nous font confiance</div>
+    <div class="testimonials">
+      <div class="testimonial-card">
+        <div class="text" lang="en">"Simple, fast, and does exactly what I need. My members are well organized and I can see my profits clearly."</div>
+        <div class="text" lang="fr">"Simple, rapide et fait exactement ce dont j'ai besoin. Mes membres sont bien organisés et je vois mes bénéfices clairement."</div>
+        <div class="author"><div class="avatar">H</div><div class="info">Hamza <span lang="en">Gym Owner, Casablanca</span><span lang="fr">Propriétaire de salle, Casablanca</span></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="text" lang="en">"I use it on my PC and phone. The data sync is a lifesaver. Best investment for my gym."</div>
+        <div class="text" lang="fr">"Je l'utilise sur mon PC et mon téléphone. La synchro des données est géniale. Meilleur investissement."</div>
+        <div class="author"><div class="avatar">S</div><div class="info">Sofia <span lang="en">Fitness Club Manager, Marrakech</span><span lang="fr">Gérante de club, Marrakech</span></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="text" lang="en">"No monthly fees, one payment and done. The multi-branch feature lets me manage both my gyms easily."</div>
+        <div class="text" lang="fr">"Pas d'abonnement, un paiement unique. Le multi-salles me permet de gérer mes deux salles facilement."</div>
+        <div class="author"><div class="avatar">Y</div><div class="info">Youssef <span lang="en">Gym Chain Owner, Rabat</span><span lang="fr">Propriétaire de chaîne, Rabat</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="background:linear-gradient(135deg,#0c0d1a,#111225)">
+  <div class="container">
+    <div class="section-label" lang="en">CONTACT</div>
+    <div class="section-label" lang="fr">CONTACT</div>
+    <div class="section-title" lang="en">Get your license today</div>
+    <div class="section-title" lang="fr">Obtenez votre licence</div>
+    <div class="section-sub" lang="en">Email us, WhatsApp us, or fill the form. We respond within 24 hours.</div>
+    <div class="section-sub" lang="fr">Envoyez-nous un email, WhatsApp ou remplissez le formulaire. Réponse sous 24h.</div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item"><div class="icon">📧</div>contact@gympro.ma</div>
+        <div class="contact-item"><div class="icon">📞</div>+212 6XX-XXXXXX</div>
+        <div class="contact-item"><div class="icon">💬</div lang="en">WhatsApp: +212 6XX-XXXXXX</div>
+        <div class="contact-item"><div class="icon" lang="en">💬</div lang="fr">WhatsApp : +212 6XX-XXXXXX</div>
+        <div class="contact-item"><div class="icon">🌍</div lang="en">Available worldwide</div>
+        <div class="contact-item"><div class="icon" lang="fr">🌍</div lang="fr">Disponible dans le monde entier</div>
+      </div>
+      <form class="contact-form" onsubmit="event.preventDefault();alert('Merci! Nous vous contacterons.');this.reset()">
+        <input type="text" placeholder="Name / Nom" required>
+        <input type="email" placeholder="Email" required>
+        <input type="text" placeholder="Gym name / Nom de la salle">
+        <select style="background:#0c0d1a;border:1px solid #1e2040;border-radius:8px;padding:12px 14px;color:#e8eaf6;font-size:14px;font-family:'Inter',sans-serif;outline:none">
+          <option value="" lang="en">Interested in...</option>
+          <option value="" lang="fr">Intéressé par...</option>
+          <option lang="en" value="starter">Starter ($49)</option><option lang="fr" value="starter">Starter ($49)</option>
+          <option lang="en" value="pro">Pro ($99)</option><option lang="fr" value="pro">Pro ($99)</option>
+          <option lang="en" value="enterprise">Enterprise (Custom)</option><option lang="fr" value="enterprise">Entreprise (Sur mesure)</option>
+        </select>
+        <textarea placeholder="Message" required></textarea>
+        <button type="submit" lang="en">Send Message</button>
+        <button type="submit" lang="fr">Envoyer</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">GYMPRO</div>
+  <p lang="en">© 2026 GymPro. All rights reserved.</p>
+  <p lang="fr">© 2026 GymPro. Tous droits réservés.</p>
+  <div class="links">
+    <a href="GymPro_Salle_Mobile.html" target="_blank" lang="en">Demo</a>
+    <a href="GymPro_Salle_Mobile.html" target="_blank" lang="fr">Démo</a>
+    <a href="#contact" lang="en">Contact</a>
+    <a href="#contact" lang="fr">Contact</a>
+  </div>
+</footer>
+
+<script>
+function toggleLang(){
+  document.body.classList.toggle('fr');
+  localStorage.setItem('gympro_lang', document.body.classList.contains('fr') ? 'fr' : 'en');
+}
+if(localStorage.getItem('gympro_lang') === 'fr') document.body.classList.add('fr');
+</script>
+
+</body>
+</html>
